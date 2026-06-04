@@ -1,0 +1,1603 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portrait Color Atelier</title>
+  <style>
+    :root {
+      --ink: #25211f;
+      --muted: #736a63;
+      --line: #e8ddd5;
+      --paper: #fffaf6;
+      --panel: #ffffff;
+      --rose: #b76573;
+      --rose-dark: #8f3f51;
+      --sage: #7d967a;
+      --gold: #c69b55;
+      --blue: #57738d;
+      --shadow: 0 18px 55px rgba(86, 54, 36, 0.13);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(255, 250, 246, 0.92), rgba(250, 244, 239, 0.98)),
+        url("https://images.unsplash.com/photo-1512316609839-ce289d3eba0a?auto=format&fit=crop&w=2200&q=80");
+      background-size: cover;
+      background-attachment: fixed;
+      font-family: Inter, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .shell {
+      min-height: 100vh;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px clamp(18px, 4vw, 56px);
+      border-bottom: 1px solid rgba(232, 221, 213, 0.78);
+      background: rgba(255, 250, 246, 0.86);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      background: conic-gradient(from 40deg, #b76573, #d9a766, #829a7c, #6482a0, #b76573);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .brand-title {
+      font-weight: 720;
+      font-size: 15px;
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav span {
+      padding: 7px 9px;
+    }
+
+    .member-pill {
+      color: #fff;
+      background: var(--ink);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .hero {
+      min-height: calc(100vh - 63px);
+      display: grid;
+      align-items: center;
+      padding: 34px clamp(18px, 4vw, 56px) 52px;
+    }
+
+    .hero-inner {
+      width: min(1160px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
+      gap: clamp(26px, 5vw, 64px);
+      align-items: center;
+    }
+
+    .hero-copy {
+      max-width: 600px;
+      padding: 20px 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      color: var(--rose-dark);
+      font-size: 13px;
+      font-weight: 680;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 32px;
+      height: 1px;
+      background: var(--rose-dark);
+    }
+
+    h1 {
+      margin: 0 0 18px;
+      max-width: 520px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(42px, 6.8vw, 76px);
+      line-height: 0.98;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 520px;
+      margin: 0 0 26px;
+      color: #5e5650;
+      font-size: clamp(16px, 1.7vw, 19px);
+      line-height: 1.75;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      border: 0;
+      min-height: 44px;
+      padding: 0 17px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 690;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      color: white;
+      background: var(--rose-dark);
+      box-shadow: 0 10px 26px rgba(143, 63, 81, 0.24);
+    }
+
+    .btn-primary:hover {
+      background: #7c3446;
+    }
+
+    .btn-secondary {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid var(--line);
+    }
+
+    .studio {
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(232, 221, 213, 0.92);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .studio-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 250, 246, 0.88);
+    }
+
+    .studio-head h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .studio-head p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .status-tag {
+      align-self: flex-start;
+      color: var(--rose-dark);
+      background: #f7e6e8;
+      border: 1px solid #edcdd3;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .studio-body {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 0;
+    }
+
+    .upload-zone {
+      min-height: 420px;
+      padding: 20px;
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .drop {
+      flex: 1;
+      min-height: 265px;
+      border: 1.5px dashed #d3b9b2;
+      border-radius: var(--radius);
+      background: #fff7f4;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .drop input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .upload-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 14px;
+      color: #fff;
+      background: var(--rose);
+      font-size: 24px;
+    }
+
+    .drop strong {
+      display: block;
+      font-size: 17px;
+      margin-bottom: 6px;
+    }
+
+    .drop small {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .preview {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      inset: 0;
+      display: none;
+    }
+
+    .drop.has-image {
+      border-style: solid;
+      background: #222;
+    }
+
+    .drop.has-image .preview {
+      display: block;
+    }
+
+    .drop.has-image .drop-copy {
+      display: none;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 8px;
+      color: #625852;
+      font-size: 13px;
+    }
+
+    .gender-panel {
+      display: none;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid #ead3a9;
+      border-radius: var(--radius);
+      background: #fff8eb;
+    }
+
+    .gender-panel.is-visible {
+      display: grid;
+    }
+
+    .gender-panel strong {
+      color: #10233c;
+      font-size: 14px;
+    }
+
+    .gender-panel small {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .gender-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .gender-option {
+      border: 1px solid #dfc9a0;
+      border-radius: 6px;
+      background: #fff;
+      min-height: 38px;
+      cursor: pointer;
+      color: #493a2d;
+      font-weight: 720;
+    }
+
+    .gender-option.is-active {
+      color: #fff;
+      background: #10233c;
+      border-color: #10233c;
+    }
+
+    .check {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .check::before {
+      content: "✓";
+      width: 18px;
+      height: 18px;
+      flex: 0 0 18px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      background: var(--sage);
+      font-size: 11px;
+      margin-top: 1px;
+    }
+
+    .analysis-panel {
+      padding: 20px;
+      background: #fff;
+    }
+
+    .empty-state,
+    .loading-state {
+      min-height: 420px;
+      display: grid;
+      align-content: center;
+      gap: 18px;
+      color: var(--muted);
+      text-align: center;
+      padding: 24px;
+    }
+
+    .meter {
+      height: 8px;
+      border-radius: 999px;
+      background: #f1e6df;
+      overflow: hidden;
+    }
+
+    .meter span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--rose), var(--gold), var(--sage), var(--blue));
+      animation: fill 1.8s ease forwards;
+    }
+
+    @keyframes fill {
+      to { width: 100%; }
+    }
+
+    .report {
+      display: none;
+      gap: 16px;
+    }
+
+    .report.is-visible {
+      display: grid;
+    }
+
+    .result-hero {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      padding: 18px;
+      border-radius: var(--radius);
+      color: white;
+      background: linear-gradient(135deg, #8f3f51, #c07866 54%, #c69b55);
+    }
+
+    .result-hero h3 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .result-hero p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.88);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .score {
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.34);
+      text-align: center;
+      font-weight: 760;
+    }
+
+    .score span {
+      display: block;
+      font-size: 25px;
+    }
+
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .report-titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 16px 18px;
+      border-radius: var(--radius);
+      color: #fff;
+      background: #10233c;
+    }
+
+    .report-titlebar h3 {
+      margin: 0;
+      font-size: 26px;
+      letter-spacing: 0;
+    }
+
+    .report-titlebar p {
+      margin: 3px 0 0;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 13px;
+    }
+
+    .report-meta {
+      text-align: right;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 12px;
+      line-height: 1.7;
+      white-space: nowrap;
+    }
+
+    .diagnosis-board {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .module {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.94);
+      overflow: hidden;
+    }
+
+    .module.wide {
+      grid-column: span 2;
+    }
+
+    .module.full {
+      grid-column: 1 / -1;
+    }
+
+    .module-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px 8px;
+      border-bottom: 1px solid #edf0f4;
+    }
+
+    .module-no {
+      color: #98a4b8;
+      font-size: 26px;
+      font-weight: 780;
+      line-height: 1;
+    }
+
+    .module-title {
+      font-weight: 780;
+      color: #132748;
+    }
+
+    .module-body {
+      padding: 14px;
+    }
+
+    .mini-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      color: #3c4657;
+    }
+
+    .mini-table th,
+    .mini-table td {
+      padding: 8px 7px;
+      border: 1px solid #e5eaf0;
+      text-align: center;
+    }
+
+    .mini-table th {
+      background: #f1f4f8;
+      color: #132748;
+      font-weight: 760;
+    }
+
+    .info-list {
+      display: grid;
+      gap: 8px;
+      font-size: 13px;
+      color: #3f4653;
+    }
+
+    .info-list div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid #edf0f4;
+      padding-bottom: 7px;
+    }
+
+    .grade {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      color: #132748;
+      font-weight: 780;
+    }
+
+    .grade b {
+      font-size: 42px;
+      color: #19396b;
+      line-height: 1;
+    }
+
+    .avatar-card {
+      min-height: 210px;
+      border-radius: 6px;
+      background: linear-gradient(150deg, #dfe5eb, #f6f7f8);
+      display: grid;
+      place-items: center;
+      color: #6b7480;
+      text-align: center;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .avatar-card img {
+      width: 100%;
+      height: 100%;
+      max-height: 245px;
+      object-fit: cover;
+      border-radius: 6px;
+      display: none;
+    }
+
+    .avatar-card.has-image .avatar-placeholder {
+      display: none;
+    }
+
+    .avatar-card.has-image img {
+      display: block;
+    }
+
+    .office-preview {
+      min-height: 300px;
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid #dfe6ee;
+      background:
+        linear-gradient(90deg, rgba(16, 35, 60, 0.78), rgba(16, 35, 60, 0.18)),
+        url("https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=80");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .office-person {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: min(46%, 230px);
+      height: 88%;
+      transform: translateX(-50%);
+      display: grid;
+      justify-items: center;
+      align-content: end;
+    }
+
+    .office-face {
+      width: 96px;
+      height: 112px;
+      border-radius: 46% 46% 42% 42%;
+      background: #ead1bd;
+      border: 3px solid rgba(255, 255, 255, 0.72);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
+      overflow: hidden;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .office-face img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    .office-face.has-image img {
+      display: block;
+    }
+
+    .office-face.has-image span {
+      display: none;
+    }
+
+    .office-shirt {
+      width: 172px;
+      height: 142px;
+      margin-top: -10px;
+      background: linear-gradient(90deg, #eef4fb, #ffffff 42%, #dce7f1);
+      clip-path: polygon(24% 0, 76% 0, 94% 100%, 6% 100%);
+      border-radius: 10px 10px 0 0;
+      position: relative;
+      box-shadow: 0 22px 38px rgba(0, 0, 0, 0.23);
+    }
+
+    .office-shirt::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 2px;
+      height: 100%;
+      background: #cbd8e5;
+      transform: translateX(-50%);
+    }
+
+    .office-shirt::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 72px;
+      height: 46px;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, transparent 48%, #dbe6ef 49%), linear-gradient(225deg, transparent 48%, #dbe6ef 49%);
+      background-size: 50% 100%;
+      background-position: left, right;
+      background-repeat: no-repeat;
+    }
+
+    .office-pants {
+      width: 128px;
+      height: 126px;
+      background: linear-gradient(90deg, #5d6572, #3f4753 50%, #59616e);
+      clip-path: polygon(8% 0, 92% 0, 82% 100%, 57% 100%, 50% 18%, 43% 100%, 18% 100%);
+    }
+
+    .office-badge {
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      display: grid;
+      gap: 8px;
+      max-width: 220px;
+    }
+
+    .office-badge span {
+      width: fit-content;
+      padding: 7px 9px;
+      border-radius: 999px;
+      color: #10233c;
+      background: rgba(255, 255, 255, 0.88);
+      font-size: 12px;
+      font-weight: 720;
+    }
+
+    .office-caption {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 12px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      color: rgba(255, 255, 255, 0.9);
+      background: rgba(16, 35, 60, 0.78);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .analysis-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .pose-card,
+    .outfit-card,
+    .hair-card {
+      min-height: 86px;
+      border: 1px solid #e4e9ef;
+      border-radius: 6px;
+      background: #f7f9fb;
+      padding: 10px;
+      display: grid;
+      align-content: center;
+      text-align: center;
+      color: #132748;
+      font-weight: 720;
+      font-size: 12px;
+    }
+
+    .outfit-grid,
+    .hair-grid,
+    .routine-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .outfit-card small,
+    .hair-card small,
+    .routine-card small {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
+    .routine-card {
+      border: 1px solid #e4e9ef;
+      border-radius: 6px;
+      padding: 10px;
+      background: #f7f9fb;
+      text-align: center;
+      font-size: 12px;
+      color: #132748;
+      font-weight: 720;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      padding: 7px 9px;
+      border-radius: 999px;
+      background: #f1f4f8;
+      color: #132748;
+      font-size: 12px;
+      font-weight: 680;
+    }
+
+    .commercial-card {
+      display: grid;
+      grid-template-columns: 1.2fr 0.7fr 1fr;
+      gap: 16px;
+      align-items: center;
+      padding: 18px;
+      border-radius: var(--radius);
+      color: #10233c;
+      background: linear-gradient(120deg, #f7f9fb, #fffaf2);
+      border: 1px solid var(--line);
+    }
+
+    .commercial-card h4 {
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+
+    .commercial-price {
+      font-size: 42px;
+      font-weight: 820;
+      color: #d92f2f;
+    }
+
+    .qr {
+      justify-self: end;
+      width: 92px;
+      height: 92px;
+      border: 8px solid #10233c;
+      background:
+        linear-gradient(90deg, #10233c 10px, transparent 10px) 0 0 / 22px 22px,
+        linear-gradient(#10233c 10px, transparent 10px) 0 0 / 22px 22px,
+        #fff;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 15px;
+      background: var(--panel);
+    }
+
+    .card h4 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: #3b3430;
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+      line-height: 1.58;
+      font-size: 13px;
+    }
+
+    .card p {
+      margin: 0;
+    }
+
+    .card ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .swatches {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    .swatch {
+      aspect-ratio: 1;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+    }
+
+    .tones {
+      display: grid;
+      gap: 10px;
+    }
+
+    .tone-row {
+      display: grid;
+      grid-template-columns: 64px 1fr 42px;
+      gap: 9px;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .bar {
+      height: 7px;
+      border-radius: 999px;
+      background: #f0e6df;
+      overflow: hidden;
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--rose);
+    }
+
+    .locked {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 15px;
+      border: 1px solid #ead3a9;
+      background: #fff8eb;
+      border-radius: var(--radius);
+    }
+
+    .locked strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+
+    .locked small {
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .section {
+      width: min(1160px, calc(100% - 36px));
+      margin: 0 auto 42px;
+      padding: 26px 0 0;
+      border-top: 1px solid rgba(115, 106, 99, 0.18);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 18px;
+    }
+
+    .section h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .section p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .plans {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .plan {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 12px 38px rgba(86, 54, 36, 0.08);
+    }
+
+    .plan.featured {
+      border-color: #d7b16b;
+      box-shadow: 0 18px 50px rgba(145, 104, 46, 0.16);
+    }
+
+    .plan h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+    }
+
+    .price {
+      font-size: 28px;
+      font-weight: 760;
+      margin: 8px 0;
+    }
+
+    .plan ul {
+      margin: 14px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 13px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      max-width: 320px;
+      padding: 13px 14px;
+      background: var(--ink);
+      color: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .toast.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      .nav {
+        display: none;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 24px;
+      }
+
+      .hero-inner,
+      .studio-body,
+      .plans,
+      .diagnosis-board,
+      .commercial-card {
+        grid-template-columns: 1fr;
+      }
+
+      .module.wide,
+      .module.full {
+        grid-column: auto;
+      }
+
+      .upload-zone {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        min-height: 0;
+      }
+
+      .empty-state,
+      .loading-state {
+        min-height: 300px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .topbar {
+        padding: 12px 14px;
+      }
+
+      .brand-title {
+        max-width: 170px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .studio-head,
+      .result-hero,
+      .section-head,
+      .locked {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .report-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .report-titlebar,
+      .commercial-card {
+        align-items: start;
+      }
+
+      .report-meta {
+        text-align: left;
+        white-space: normal;
+      }
+
+      .outfit-grid,
+      .hair-grid,
+      .routine-grid,
+      .analysis-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .office-person {
+        width: 64%;
+      }
+
+      .swatches {
+        grid-template-columns: repeat(5, minmax(42px, 1fr));
+      }
+
+      .hero-actions,
+      .hero-actions .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">C</div>
+        <div class="brand-title">Color Atelier 会员诊断</div>
+      </div>
+      <nav class="nav" aria-label="主导航">
+        <span>肖像分析</span>
+        <span>专属色卡</span>
+        <span>妆发建议</span>
+        <span>报告下载</span>
+      </nav>
+      <div class="member-pill">Pro Member</div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <div class="eyebrow">Portrait Color Diagnosis</div>
+          <h1>个人肖像色彩诊断</h1>
+          <p class="lead">上传一张清晰正脸照，系统会模拟生成适合会员服务的完整形象报告：肤色冷暖、明度纯度、推荐色板、避雷色、妆容与穿搭方向。</p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" id="jumpUpload" type="button">开始上传</button>
+            <button class="btn btn-secondary" id="demoReport" type="button">查看示例报告</button>
+          </div>
+        </div>
+
+        <section class="studio" id="studio">
+          <div class="studio-head">
+            <div>
+              <h2>会员肖像分析台</h2>
+              <p>当前为网页原型，诊断结果使用模拟数据，后续可接入真实 AI 分析。</p>
+            </div>
+            <span class="status-tag">模拟版</span>
+          </div>
+
+          <div class="studio-body">
+            <div class="upload-zone">
+              <label class="drop" id="dropZone">
+                <img class="preview" id="preview" alt="上传的肖像预览" />
+                <span class="drop-copy">
+                  <span class="upload-icon">↑</span>
+                  <strong>上传会员肖像</strong>
+                  <small>支持 JPG、PNG。建议自然光、正脸、无遮挡。</small>
+                </span>
+                <input id="photoInput" type="file" accept="image/*" />
+              </label>
+
+              <button class="btn btn-primary" id="analyzeBtn" type="button">生成诊断报告</button>
+
+              <div class="gender-panel" id="genderPanel">
+                <strong>AI 预估形象类型：<span id="genderResult">女性</span></strong>
+                <small>正式版可由视觉模型先判断男女/呈现类型；会员也可以手动确认，避免误判影响报告。</small>
+                <div class="gender-options" aria-label="性别确认">
+                  <button class="gender-option is-active" type="button" data-gender="female">女性报告</button>
+                  <button class="gender-option" type="button" data-gender="male">男性报告</button>
+                </div>
+              </div>
+
+              <div class="checklist">
+                <div class="check">照片只用于本次诊断展示，正式版应提供删除入口。</div>
+                <div class="check">会员报告适合接入 PDF、分享图和历史档案。</div>
+                <div class="check">报告建议加入“非医疗/非绝对判断”说明。</div>
+              </div>
+            </div>
+
+            <div class="analysis-panel">
+              <div class="empty-state" id="emptyState">
+                <div>
+                  <h3>等待上传肖像</h3>
+                  <p>上传照片后，会在这里生成完整的个人色彩诊断报告。</p>
+                </div>
+              </div>
+
+              <div class="loading-state hidden" id="loadingState">
+                <div>
+                  <h3>正在生成会员报告</h3>
+                  <p id="loadingText">识别肤色冷暖与面部对比度...</p>
+                </div>
+                <div class="meter"><span></span></div>
+              </div>
+
+              <article class="report" id="report">
+                <div class="report-titlebar">
+                  <div>
+                    <h3>AI 个人形象分析特卡</h3>
+                    <p>PERSONAL IMAGE MODEL CARD · 专属定制版</p>
+                  </div>
+                  <div class="report-meta">
+                    生成时间：2026-06-04 14:30<br />
+                    报告编号：AI20260604001
+                  </div>
+                </div>
+
+                <div class="result-hero">
+                  <div>
+                    <h3>柔暖春秋型</h3>
+                    <p>整体呈现暖调、中高明度、柔和纯度。适合带有奶油感、蜜桃感和轻复古气质的色彩，避免过冷、过灰、过强对比。</p>
+                  </div>
+                  <div class="score"><span>91</span>适配分</div>
+                </div>
+
+                <div class="diagnosis-board">
+                  <section class="module">
+                    <div class="module-head"><span class="module-no">01</span><span class="module-title">基础信息</span></div>
+                    <div class="module-body">
+                      <div class="avatar-card" id="reportAvatar">
+                        <img id="reportAvatarImg" alt="报告头像" />
+                        <span class="avatar-placeholder">上传肖像后<br />显示会员头像</span>
+                      </div>
+                      <div class="info-list" style="margin-top:12px">
+                        <div><span>会员姓名</span><b id="memberName">张女士</b></div>
+                        <div><span>年龄区间</span><b>28-35</b></div>
+                        <div><span>形象类型</span><b id="reportGender">女性</b></div>
+                        <div><span>肤色倾向</span><b>暖象牙调</b></div>
+                        <div><span>风格气质</span><b id="styleTemperament">柔和精致</b></div>
+                      </div>
+                      <div class="grade"><span>AI 形象等级</span><b>A+</b></div>
+                    </div>
+                  </section>
+
+                  <section class="module wide">
+                    <div class="module-head"><span class="module-no">02</span><span class="module-title">肖像色彩扫描</span></div>
+                    <div class="module-body">
+                      <div class="analysis-strip">
+                        <div class="pose-card">肤色<br /><small>暖调偏亮</small></div>
+                        <div class="pose-card">发色<br /><small>自然深棕</small></div>
+                        <div class="pose-card">五官对比<br /><small>中低对比</small></div>
+                      </div>
+                      <table class="mini-table">
+                        <thead><tr><th>项目</th><th>结果</th><th>建议</th></tr></thead>
+                        <tbody>
+                          <tr><td>冷暖调</td><td>暖调</td><td>优先奶油、杏桃、蜂蜜色</td></tr>
+                          <tr><td>明度</td><td>中高</td><td>少用沉闷深色压脸</td></tr>
+                          <tr><td>纯度</td><td>柔和</td><td>避免荧光高饱和</td></tr>
+                          <tr><td>面部对比</td><td>中低</td><td>妆容线条不宜过硬</td></tr>
+                        </tbody>
+                      </table>
+                      <div class="grade"><span>色彩综合评分</span><b>91</b></div>
+                    </div>
+                  </section>
+
+                  <section class="module">
+                    <div class="module-head"><span class="module-no">03</span><span class="module-title">风格关键词</span></div>
+                    <div class="module-body">
+                      <div class="tag-list">
+                        <span class="tag">温柔</span>
+                        <span class="tag">亲和</span>
+                        <span class="tag">轻熟</span>
+                        <span class="tag">精致</span>
+                        <span class="tag">松弛感</span>
+                        <span class="tag">暖氛围</span>
+                      </div>
+                      <p style="margin:12px 0 0;color:var(--muted);line-height:1.6;font-size:13px">适合“看起来舒服、有质感、不过分锐利”的形象表达。商业场景中建议走高信任感路线。</p>
+                    </div>
+                  </section>
+
+                  <section class="module wide">
+                    <div class="module-head"><span class="module-no">04</span><span class="module-title">穿搭痛点分析</span></div>
+                    <div class="module-body">
+                      <div class="outfit-grid">
+                        <div class="outfit-card" id="painOne">冷白衬衫 ✕<small>容易显肤色疲惫</small></div>
+                        <div class="outfit-card" id="painTwo">纯黑外套 ✕<small>压低亲和感</small></div>
+                        <div class="outfit-card" id="painThree">荧光色 ✕<small>抢走面部焦点</small></div>
+                        <div class="outfit-card" id="painFour">暖浅色 ✓<small>更显气色和质感</small></div>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="module wide">
+                    <div class="module-head"><span class="module-no">05</span><span class="module-title">AI 商务换景换装</span></div>
+                    <div class="module-body">
+                      <div class="office-preview" id="officePreview">
+                        <div class="office-badge">
+                          <span>办公场景</span>
+                          <span>衬衫 + 休闲裤</span>
+                          <span>会员商务头像方向</span>
+                        </div>
+                        <div class="office-person">
+                          <div class="office-face" id="officeFace">
+                            <img id="officeFaceImg" alt="商务换装头像" />
+                            <span>上传头像后<br />自动同步</span>
+                          </div>
+                          <div class="office-shirt"></div>
+                          <div class="office-pants"></div>
+                        </div>
+                        <div class="office-caption">原型模拟：正式版可用图像编辑模型把会员肖像真实生成到办公室，并替换为衬衫与休闲裤。</div>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="module wide">
+                    <div class="module-head"><span class="module-no">06</span><span class="module-title">色彩诊断</span></div>
+                    <div class="module-body">
+                      <h4 style="margin:0 0 10px;color:#132748">最适合你的颜色</h4>
+                      <div class="swatches" aria-label="推荐色板">
+                        <span class="swatch" style="background:#f1c9a7"></span>
+                        <span class="swatch" style="background:#e7a66f"></span>
+                        <span class="swatch" style="background:#d46f68"></span>
+                        <span class="swatch" style="background:#9aa96e"></span>
+                        <span class="swatch" style="background:#8a623d"></span>
+                        <span class="swatch" style="background:#f5df9b"></span>
+                        <span class="swatch" style="background:#c98f6b"></span>
+                        <span class="swatch" style="background:#b76573"></span>
+                        <span class="swatch" style="background:#7d967a"></span>
+                        <span class="swatch" style="background:#c69b55"></span>
+                      </div>
+                      <h4 style="margin:14px 0 10px;color:#132748">建议避免的颜色</h4>
+                      <div class="swatches" aria-label="避雷色">
+                        <span class="swatch" style="background:#1f2f86"></span>
+                        <span class="swatch" style="background:#7f7f89"></span>
+                        <span class="swatch" style="background:#c8cdd2"></span>
+                        <span class="swatch" style="background:#5b2d7b"></span>
+                        <span class="swatch" style="background:#050505"></span>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="module wide">
+                    <div class="module-head"><span class="module-no">07</span><span class="module-title">妆发推荐</span></div>
+                    <div class="module-body">
+                      <div class="hair-grid">
+                        <div class="hair-card" id="makeupOne">口红<small>奶茶、珊瑚、暖豆沙</small></div>
+                        <div class="hair-card" id="makeupTwo">腮红<small>杏桃、裸粉橘</small></div>
+                        <div class="hair-card" id="makeupThree">眼影<small>香槟、暖棕、橄榄金</small></div>
+                        <div class="hair-card" id="makeupFour">发色<small>栗棕、蜂蜜茶、暖黑茶</small></div>
+                      </div>
+                      <p id="makeupSummary" style="margin:12px 0 0;color:var(--muted);line-height:1.6;font-size:13px">不推荐大面积银灰、冷紫、蓝调粉和高对比黑白妆，容易让五官显得紧绷。</p>
+                    </div>
+                  </section>
+
+                  <section class="module full">
+                    <div class="module-head"><span class="module-no">08</span><span class="module-title">30 天形象改善方案</span></div>
+                    <div class="module-body">
+                      <div class="routine-grid">
+                        <div class="routine-card">衣橱替换<small>先替换贴脸上衣颜色</small></div>
+                        <div class="routine-card">日常妆容<small>固定一套暖调通勤妆</small></div>
+                        <div class="routine-card">发型调整<small>增加蓬松度和柔线条</small></div>
+                        <div class="routine-card">拍照模板<small>建立会员头像标准姿势</small></div>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="module wide">
+                    <div class="module-head"><span class="module-no">09</span><span class="module-title">改善效果预估</span></div>
+                    <div class="module-body">
+                      <table class="mini-table">
+                        <thead><tr><th>项目</th><th>当前</th><th>优化后</th><th>提升</th></tr></thead>
+                        <tbody>
+                          <tr><td>气色感</td><td>72</td><td>90</td><td>+18</td></tr>
+                          <tr><td>精致感</td><td>70</td><td>88</td><td>+18</td></tr>
+                          <tr><td>亲和力</td><td>76</td><td>92</td><td>+16</td></tr>
+                          <tr><td>商业信任感</td><td>68</td><td>86</td><td>+18</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+
+                  <section class="module wide">
+                    <div class="module-head"><span class="module-no">10</span><span class="module-title">推荐方案</span></div>
+                    <div class="module-body">
+                      <div class="commercial-card">
+                        <div>
+                          <h4>AI 色彩诊断 + 会员形象报告</h4>
+                          <p style="margin:0;color:var(--muted);line-height:1.6;font-size:13px">包含专属色卡、妆发建议、穿搭建议、头像优化方向和 PDF 报告。</p>
+                        </div>
+                        <div>
+                          <div style="color:var(--muted);font-size:13px">体验价</div>
+                          <div class="commercial-price">¥99</div>
+                        </div>
+                        <div class="qr" aria-label="预约二维码占位"></div>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+
+                <div class="locked">
+                  <div>
+                    <strong>会员深度模块</strong>
+                    <small>正式版可解锁发色建议、首饰金银选择、胶囊衣橱、专属购物清单和 PDF 下载。</small>
+                  </div>
+                  <button class="btn btn-secondary" id="downloadBtn" type="button">生成 PDF</button>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="section" aria-label="会员方案">
+      <div class="section-head">
+        <div>
+          <h2>会员服务结构</h2>
+          <p>原型预留了会员权益层级，后续可以接登录、支付、报告归档和顾问复核。</p>
+        </div>
+      </div>
+      <div class="plans">
+        <article class="plan">
+          <h3>体验诊断</h3>
+          <div class="price">¥19</div>
+          <ul>
+            <li>一次肖像色彩快测</li>
+            <li>基础推荐色板</li>
+            <li>页面报告查看</li>
+          </ul>
+        </article>
+        <article class="plan featured">
+          <h3>Pro 会员</h3>
+          <div class="price">¥99</div>
+          <ul>
+            <li>完整个人色彩报告</li>
+            <li>妆发与穿搭建议</li>
+            <li>PDF 与分享图下载</li>
+          </ul>
+        </article>
+        <article class="plan">
+          <h3>顾问复核</h3>
+          <div class="price">¥299</div>
+          <ul>
+            <li>人工形象顾问复盘</li>
+            <li>衣橱与购物清单</li>
+            <li>1 对 1 调整建议</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast">这是原型演示：正式版可接入真实 AI 诊断和 PDF 导出。</div>
+
+  <script>
+    const input = document.getElementById("photoInput");
+    const preview = document.getElementById("preview");
+    const reportAvatar = document.getElementById("reportAvatar");
+    const reportAvatarImg = document.getElementById("reportAvatarImg");
+    const officeFace = document.getElementById("officeFace");
+    const officeFaceImg = document.getElementById("officeFaceImg");
+    const dropZone = document.getElementById("dropZone");
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    const genderPanel = document.getElementById("genderPanel");
+    const genderResult = document.getElementById("genderResult");
+    const genderOptions = document.querySelectorAll(".gender-option");
+    const emptyState = document.getElementById("emptyState");
+    const loadingState = document.getElementById("loadingState");
+    const report = document.getElementById("report");
+    const loadingText = document.getElementById("loadingText");
+    const toast = document.getElementById("toast");
+    let selectedGender = "female";
+
+    const loadingSteps = [
+      "识别肤色冷暖与面部对比度...",
+      "生成办公场景与商务换装预览...",
+      "匹配个人色彩季型...",
+      "生成推荐色板与避雷色...",
+      "整理妆容、穿搭和会员建议..."
+    ];
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("is-visible");
+      window.setTimeout(() => toast.classList.remove("is-visible"), 2600);
+    }
+
+    function showReport() {
+      emptyState.classList.add("hidden");
+      loadingState.classList.remove("hidden");
+      report.classList.remove("is-visible");
+      let step = 0;
+      loadingText.textContent = loadingSteps[step];
+      const timer = window.setInterval(() => {
+        step += 1;
+        if (step < loadingSteps.length) {
+          loadingText.textContent = loadingSteps[step];
+        }
+      }, 460);
+
+      window.setTimeout(() => {
+        window.clearInterval(timer);
+        loadingState.classList.add("hidden");
+        report.classList.add("is-visible");
+      }, 1900);
+    }
+
+    function setGender(gender) {
+      selectedGender = gender;
+      const isFemale = gender === "female";
+      genderResult.textContent = isFemale ? "女性" : "男性";
+      document.getElementById("memberName").textContent = isFemale ? "张女士" : "张先生";
+      document.getElementById("reportGender").textContent = isFemale ? "女性" : "男性";
+      document.getElementById("styleTemperament").textContent = isFemale ? "柔和精致" : "清爽专业";
+      document.getElementById("painOne").innerHTML = isFemale ? "冷白衬衫 ✕<small>容易显肤色疲惫</small>" : "紧身衬衫 ✕<small>容易显拘谨和局促</small>";
+      document.getElementById("painTwo").innerHTML = isFemale ? "纯黑外套 ✕<small>压低亲和感</small>" : "纯黑套装 ✕<small>压低亲和与松弛感</small>";
+      document.getElementById("painThree").innerHTML = isFemale ? "荧光色 ✕<small>抢走面部焦点</small>" : "高饱和亮色 ✕<small>商务场景不够稳重</small>";
+      document.getElementById("painFour").innerHTML = isFemale ? "暖浅色 ✓<small>更显气色和质感</small>" : "浅蓝衬衫 ✓<small>更清爽、可信、易亲近</small>";
+      document.getElementById("makeupOne").innerHTML = isFemale ? "口红<small>奶茶、珊瑚、暖豆沙</small>" : "衬衫<small>浅蓝、象牙白、细条纹</small>";
+      document.getElementById("makeupTwo").innerHTML = isFemale ? "腮红<small>杏桃、裸粉橘</small>" : "休闲裤<small>深灰、海军蓝、卡其</small>";
+      document.getElementById("makeupThree").innerHTML = isFemale ? "眼影<small>香槟、暖棕、橄榄金</small>" : "发型<small>清爽侧分、自然蓬松</small>";
+      document.getElementById("makeupFour").innerHTML = isFemale ? "发色<small>栗棕、蜂蜜茶、暖黑茶</small>" : "配饰<small>皮带、手表、低调镜框</small>";
+      document.getElementById("makeupSummary").textContent = isFemale
+        ? "不推荐大面积银灰、冷紫、蓝调粉和高对比黑白妆，容易让五官显得紧绷。"
+        : "不推荐过紧版型、夸张印花和过亮配饰。商务头像建议保持衬衫干净、裤装利落、发型清爽。";
+
+      genderOptions.forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.gender === gender);
+      });
+    }
+
+    input.addEventListener("change", (event) => {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      preview.src = url;
+      reportAvatarImg.src = url;
+      officeFaceImg.src = url;
+      reportAvatar.classList.add("has-image");
+      officeFace.classList.add("has-image");
+      dropZone.classList.add("has-image");
+      genderPanel.classList.add("is-visible");
+      setGender("female");
+      showToast("肖像已上传，已先做形象类型预估，可确认后生成报告。");
+    });
+
+    genderOptions.forEach((button) => {
+      button.addEventListener("click", () => {
+        setGender(button.dataset.gender);
+        showToast(`已切换为${button.dataset.gender === "female" ? "女性" : "男性"}报告方向。`);
+      });
+    });
+
+    analyzeBtn.addEventListener("click", () => {
+      if (!dropZone.classList.contains("has-image")) {
+        showToast("请先上传一张肖像照片。");
+        return;
+      }
+      showReport();
+    });
+
+    document.getElementById("demoReport").addEventListener("click", () => {
+      document.getElementById("studio").scrollIntoView({ behavior: "smooth", block: "center" });
+      showReport();
+    });
+
+    document.getElementById("jumpUpload").addEventListener("click", () => {
+      document.getElementById("studio").scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+
+    document.getElementById("downloadBtn").addEventListener("click", () => {
+      showToast("PDF 导出是预留功能，真实产品里可以在这里生成会员报告。");
+    });
+  </script>
+</body>
+</html>
